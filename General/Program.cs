@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _5TreesAndGraphs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +13,60 @@ namespace General
     {
         static void Main(string[] args)
         {
+
+
+            var p = ""[0];
+              var dic = new Dictionary<char,int>();
+
+            var graph1 = new GraphAdjacencyList();
+            graph1.AddEdge(1, 2);
+            graph1.AddEdge(2,3);
+            graph1.AddEdge(2,0);
+            graph1.AddEdge(0,1);
+            graph1.AddEdge(0, 2);
+            graph1.AddEdge(3,3);
+            graph1.Print();
+
+            Console.WriteLine();
+            var graph2 = new GraphAdjacencyMatrix(4);
+            graph2.AddEdge(1, 2);
+            graph2.AddEdge(2, 3);
+            graph2.AddEdge(2, 0);
+            graph2.AddEdge(0, 1);
+            graph2.AddEdge(0, 2);
+            graph2.AddEdge(3, 3);
+            graph2.Print();
+            return;
+            var minHeap = new MinHeap();
+            minHeap.Add(3);
+            minHeap.Add(10);
+            minHeap.Add(15);
+            minHeap.Add(25);
+            minHeap.Add(30);
+            minHeap.Add(5);
+            minHeap.Add(22);
+            minHeap.Add(20);
+            minHeap.PrintAsArray();
+            minHeap.Print();
+            minHeap.PrintByLevels();
+            Console.WriteLine("height: " +  minHeap.GetHeight());
+
+            var maxHeap = new MaxHeap();
+            maxHeap.Add(3);
+            maxHeap.Add(10);
+            maxHeap.Add(15);
+            maxHeap.Add(25);
+            maxHeap.Add(30);
+            maxHeap.Add(5);
+            maxHeap.Add(22);
+            maxHeap.Add(20);
+            maxHeap.PrintAsArray();
+            maxHeap.Print();
+            maxHeap.PrintByLevels();
+            Console.WriteLine("height: " + maxHeap.GetHeight());
+
+            return;
+
             var list = new List<int>() { 1, 2, 3, 4, 5, 6 };
 
             list.ForEach(x => Console.Write($"{x},"));
@@ -111,7 +166,7 @@ namespace General
 
         private static void TestTrees()
         {
-            BinaryTree bt = new BinaryTree();
+            Trees.BinaryTree bt = new Trees.BinaryTree();
             BTNode node50 = new BTNode(50);
             BTNode node25 = new BTNode(25);
             BTNode node75 = new BTNode(75);

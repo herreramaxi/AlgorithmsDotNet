@@ -79,12 +79,11 @@ namespace _4LinkedLists
             pointer.Next = null;
         }
 
-
         public bool Remove(Element element)
         {
             if (element == null) return false;
 
-            if (Object.ReferenceEquals(this.Head, element))
+            if (this.Head == element)
             {
                 this.Head = this.Head.Next;
                 return true;
@@ -94,7 +93,7 @@ namespace _4LinkedLists
 
             while (curPos != null)
             {
-                if (Object.ReferenceEquals(curPos.Next, element))
+                if (curPos.Next == element)
                 {
 
                     curPos.Next = element.Next;
@@ -177,6 +176,60 @@ namespace _4LinkedLists
             return behindPosition;
         }
 
+        /// <summary>
+        /// O(N)
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAcyclic()
+        {
+            var slow = this.Head;
+            var fast = this.Head.Next;
+
+            while (true)
+            {
+                if (slow == null || fast == null) return false;
+
+                if (slow == fast || slow == fast.Next)
+                {
+                    return true;
+                }
+
+                slow = slow.Next;
+                fast = fast.Next?.Next;
+            }
+        }
+
+        public bool IsAcyclic2()
+        {
+            var visited = new List<Element>();
+            var cur = this.Head;
+            while (cur != null)
+            {
+                if (visited.Contains(cur))
+                    return true;
+
+                visited.Add(cur);
+                cur = cur.Next;
+            }
+
+            return false;
+        }
+
+        public bool IsAcyclic3()
+        {
+            var visited = new HashSet<Element>();
+            var cur = this.Head;
+            while (cur != null)
+            {
+                if (visited.Contains(cur))
+                    return true;
+
+                visited.Add(cur);
+                cur = cur.Next;
+            }
+
+            return false;
+        }
         public void Print()
         {
             var pointer = this.Head;

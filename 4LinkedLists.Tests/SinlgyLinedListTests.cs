@@ -91,5 +91,56 @@ namespace _4LinkedLists.Tests
 
             Assert.AreEqual(null, list.GetMthToLast(5));
         }
+
+        [Test]
+        public void TestAcyclic()
+        {
+            var acyclicList = new SinlgyLinkedList();
+            acyclicList.InsertLast(3);
+            acyclicList.InsertLast(2);
+            var node4 =acyclicList.InsertLast(4);
+           acyclicList.InsertLast(6);
+            var node2=acyclicList.InsertLast(2);
+
+            Assert.IsFalse(acyclicList.IsAcyclic());
+
+            node2.Next = node4;
+
+            Assert.IsTrue(acyclicList.IsAcyclic());
+        }
+
+        [Test]
+        public void TestAcyclic2()
+        {
+            var acyclicList = new SinlgyLinkedList();
+            acyclicList.InsertLast(3);
+            acyclicList.InsertLast(2);
+            var node4 = acyclicList.InsertLast(4);
+            acyclicList.InsertLast(6);
+            var node2 = acyclicList.InsertLast(2);
+
+            Assert.IsFalse(acyclicList.IsAcyclic2());
+
+            node2.Next = node4;
+
+            Assert.IsTrue(acyclicList.IsAcyclic2());
+        }
+
+        [Test]
+        public void TestAcyclic3()
+        {
+            var acyclicList = new SinlgyLinkedList();
+            acyclicList.InsertLast(3);
+            acyclicList.InsertLast(2);
+            var node4 = acyclicList.InsertLast(4);
+            acyclicList.InsertLast(6);
+            var node2 = acyclicList.InsertLast(2);
+
+            Assert.IsFalse(acyclicList.IsAcyclic3());
+
+            node2.Next = node4;
+
+            Assert.IsTrue(acyclicList.IsAcyclic3());
+        }
     }
 }

@@ -74,9 +74,11 @@ namespace _4LinkedLists.Tests
         {
             var list = new DoublyLinkedList();
             list.InsertLast(1);
-            list.InsertLast(2);
+            var node1 = list.Head;
+            list.InsertLast(2);           
             var middle = list.Tail;
             list.InsertLast(3);
+            var node3 = list.Tail;
             list.InsertLast(4);
 
             list.Remove(middle);
@@ -84,6 +86,12 @@ namespace _4LinkedLists.Tests
             list.Remove(list.Tail);
             Assert.AreEqual(new int[] { 1, 3 }, list.GetArray());
             Assert.AreEqual(3, list.Tail.Data);
+
+            list.Remove(node1);
+            Assert.AreEqual(new int[] {  3 }, list.GetArray());
+
+            list.Remove(node3);
+            Assert.AreEqual(new int[] {  }, list.GetArray());
         }
     }
 }

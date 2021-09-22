@@ -5,7 +5,6 @@ namespace _4LinkedList
 {
     public class DoublyLinkedList
     {
-        private List<DLLElement> _list = new List<DLLElement>();
         public DLLElement Head { get; set; }
         public DLLElement Tail { get; set; }
         public void InsertFirst(int data)
@@ -66,7 +65,9 @@ namespace _4LinkedList
             if (this.Head == null) throw new Exception("List empty");
 
             this.Head = this.Head.Next;
-            this.Head.Prev = null;
+
+            if (this.Head != null)
+                this.Head.Prev = null;
         }
 
         public void RemoveLast()
@@ -79,13 +80,13 @@ namespace _4LinkedList
 
         public void Remove(DLLElement element)
         {
-            if (Object.ReferenceEquals(this.Head, element))
+            if (this.Head == element)            
             {
                 RemoveFirst();
                 return;
             }
 
-            if (Object.ReferenceEquals(this.Tail, element))
+            if (this.Tail == element)
             {
                 RemoveLast();
                 return;
@@ -113,7 +114,7 @@ namespace _4LinkedList
             }
         }
 
-        private void Append(DLLElement child,  DLLElement tail)
+        private void Append(DLLElement child, DLLElement tail)
         {
             tail.Next = child;
             child.Prev = tail;
@@ -122,6 +123,117 @@ namespace _4LinkedList
             for (; current.Next != null; current = current.Next) ;
 
             this.Tail = current;
+        }
+
+        public void Unflattening()
+        {
+            var start = this.Head;
+
+            ExploreAndSeparate(start);
+
+            //Update the tail pointer
+            var curNode = start;
+            for (; curNode.Next != null; curNode = curNode.Next) ;
+
+            this.Tail = curNode;
+        }
+
+        private void ExploreAndSeparate(DLLElement childListStart)
+        {
+            var curNode = childListStart;
+
+            while (curNode != null)
+            {
+                if (curNode.Child != null)
+                {
+                    if (curNode.Child.Prev != null)
+                    {
+                        //terminates the child list before the child
+                        curNode.Child.Prev.Next = null;
+                        //starts the child list beginning with the child
+                        curNode.Child.Prev = null;
+                    }
+
+                    ExploreAndSeparate(curNode.Child);
+                }
+
+                curNode = curNode.Next;
+            }
+        }
+
+        public void FlattenList2()
+        {
+            var current = this.Head;
+
+            while (current != null)
+            {
+                Append2(current);
+
+                current = current.Next;
+            }
+        }
+
+        public void FlattenList3()
+        {
+            var current = this.Head;
+            FlattenList3Recursive(current);
+        }
+
+        private DLLElement FlattenList3Recursive(DLLElement head)
+        {
+            if (head == null) return null;
+
+            var current = head;
+
+            while (current.Next != null)
+            {
+                if (current.Child != null)
+                {
+                    var childTail = FlattenList3Recursive(current.Child);
+
+                    childTail.Next = current.Next;
+                    current.Next.Prev = childTail;
+                    current.Next = current.Child;
+                    current.Child.Prev = current;
+                    current = childTail.Next;
+                }
+                else
+                {
+                    current = current.Next;
+                }
+            }
+
+            if (current.Child != null)
+            {
+                var childTail = FlattenList3Recursive(current.Child);
+                current.Next = current.Child;
+                current.Child.Prev = current;
+
+                return childTail;
+            }
+
+            return current;
+        }
+
+        private void Append2(DLLElement current)
+        {
+            if (current.Child == null) return;
+
+            var curPos = current.Child;
+            while (curPos.Next != null)
+            {
+                Append2(curPos);
+
+                curPos = curPos.Next;
+            }
+
+            var next = current.Next;
+            current.Next = current.Child;
+            current.Child.Prev = current;
+            next.Prev = curPos;
+            curPos.Next = next;
+
+            current.Child = null;
         }
 
         public int[] GetArray()
@@ -161,7 +273,8 @@ namespace _4LinkedList
             return element;
         }
 
-        public DLLElement InsertChild(int data) {
+        public DLLElement InsertChild(int data)
+        {
             var element = new DLLElement(data);
             this.Child = element;
 
