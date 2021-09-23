@@ -11,7 +11,7 @@
     /// </summary>
     public class QuickSort
     {
-        public static void Sort(int[] array)
+        public static void QuickSortMiddleElementPivot(int[] array)
         {
             QuickSortMiddleElementPivot(array, 0, array.Length - 1);
         }
@@ -90,7 +90,7 @@
         {
             var pivot = array[high];
             int i = low - 1;
-            for (int j = low; j < high; j++)
+            for (int j = low; j <= high; j++)
             {
                 if (array[j] <= pivot)
                 {
@@ -100,9 +100,7 @@
                 }
             }
 
-            Swap(array,i + 1, high);
-
-            return i + 1;
+            return i;
         }
 
 

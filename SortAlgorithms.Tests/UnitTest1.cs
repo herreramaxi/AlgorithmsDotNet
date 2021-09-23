@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SortAlgorithms.Tests
@@ -8,12 +9,14 @@ namespace SortAlgorithms.Tests
     public class Tests
     {
         private int[] array;
+        private IEnumerable<int> sorted;
 
         [SetUp]
         public void Setup()
         {
             Random rnd = new Random();
-            array = Enumerable.Range(1, 50).OrderBy(_ => rnd.Next()).ToArray<int>();
+            sorted = Enumerable.Range(1, 50);
+            array = sorted.OrderBy(_ => rnd.Next()).ToArray<int>();         
         }
 
         [Test]
@@ -27,36 +30,38 @@ namespace SortAlgorithms.Tests
 
         [Test]
         public void TestBubbleSort()
-        {
-            Assert.IsFalse(this.IsSortedAsc(array));
+        {         
             BubbleSort.Sort(array);
-            Assert.IsTrue(this.IsSortedAsc(array));
+            Assert.AreEqual(sorted, array);
         }
 
         [Test]
         public void TestInsertSort()
         {
-            Assert.IsFalse(this.IsSortedAsc(array));
             InsertionSort.Sort(array);
-            Assert.IsTrue(this.IsSortedAsc(array));
+            Assert.AreEqual(sorted, array);
         }
 
         [Test]
         public void TestMergeSort()
-        {
-            Assert.IsFalse(this.IsSortedAsc(array));
+        {           
             MergeSort.Sort(array);
-            Assert.IsTrue(this.IsSortedAsc(array));
+            Assert.AreEqual(sorted, array);
         }
 
         [Test]
-        public void TestQuickSort()
-        {
-            Assert.IsFalse(this.IsSortedAsc(array));
-            QuickSort.Sort(array);
-            Assert.IsTrue(this.IsSortedAsc(array));
+        public void TestQuickSortMiddleElementPivot()
+        {         
+            QuickSort.QuickSortMiddleElementPivot(array);
+            Assert.AreEqual(sorted, array);
         }
 
+        [Test]
+        public void TestQuickSortLastElementPivot()
+        {
+            QuickSort.QuickSortLastElementPivot(array,0 ,array.Length-1); 
+            Assert.AreEqual(sorted, array);
+        }
 
         private bool? IsSortedAsc(int[] array)
         {

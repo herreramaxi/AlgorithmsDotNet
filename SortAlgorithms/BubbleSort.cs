@@ -35,7 +35,7 @@
         {
             var temp = array[j];
             array[j] = array[i];
-            array[i] = array[temp];
+            array[i] = temp;
         }
     }
 }

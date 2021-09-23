@@ -26,9 +26,7 @@
 
                 while (pos > 0 && array[pos - 1] > keyElement)
                 {
-                    var elementPosMinusOne = array[pos - 1];
-                    array[pos] = elementPosMinusOne;
-
+                    array[pos] = array[pos - 1];
                     pos--;
                 }
 

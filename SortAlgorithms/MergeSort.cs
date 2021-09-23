@@ -16,10 +16,7 @@ namespace SortAlgorithms
     {
         public static void Sort(int[] array)
         {
-            int start = 0;
-            int end = array.Length - 1;
-
-            Sort(array, start, end);
+            Sort(array, 0, array.Length - 1);
         }
 
         private static void Sort(int[] array, int start, int end)
