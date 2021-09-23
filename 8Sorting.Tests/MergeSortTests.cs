@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace _8Sorting.Tests
 {
@@ -17,7 +15,7 @@ namespace _8Sorting.Tests
         public void OneTimeSetup()
         {
             Random rnd = new Random();
-            _sorted = Enumerable.Range(1, 5).ToArray();
+            _sorted = Enumerable.Range(1, 20).ToArray();
             _originalArray = _sorted.OrderBy(_ => rnd.Next()).ToArray();
         }
 

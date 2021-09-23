@@ -110,11 +110,10 @@ namespace _8Sorting
             {
                 tempArray[tempIndex++] = array[j++];
             }
-
-            //Array.Copy(tempArray, array, array.Length);
-            for ( i = left; i <= right; i++)
+                      
+            for ( i = left, tempIndex=0; i <= right; i++, tempIndex++)
             {
-                array[i] = tempArray[i];
+                array[i] = tempArray[tempIndex];
             }
         }
     }
