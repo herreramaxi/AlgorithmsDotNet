@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8Sorting", "8Sorting\8Sorti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8Sorting.Tests", "8Sorting.Tests\8Sorting.Tests.csproj", "{087BDF1E-1847-49AE-9110-A35D471B0DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "9Concurency", "9Concurency\9Concurency.csproj", "{4198B25F-DC5F-4573-ABDD-4E78E7D3ECB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "9Concurency", "9Concurency\9Concurency.csproj", "{4198B25F-DC5F-4573-ABDD-4E78E7D3ECB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "9ConcurrencyBenchmark", "9ConcurrencyBenchmark\9ConcurrencyBenchmark.csproj", "{C8BBBB92-7D50-48F6-9802-764B4108AE54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{4198B25F-DC5F-4573-ABDD-4E78E7D3ECB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4198B25F-DC5F-4573-ABDD-4E78E7D3ECB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4198B25F-DC5F-4573-ABDD-4E78E7D3ECB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BBBB92-7D50-48F6-9802-764B4108AE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BBBB92-7D50-48F6-9802-764B4108AE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BBBB92-7D50-48F6-9802-764B4108AE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BBBB92-7D50-48F6-9802-764B4108AE54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
