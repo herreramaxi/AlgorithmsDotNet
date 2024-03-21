@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Channels;
+﻿using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace _9Concurency.BankingSystem
 {
-    public class AccountProtectedByChannels
+    public class AccountProtected
     {
         private readonly Channel<double> transactionChannel = Channel.CreateBounded<double>(1);
+        private double userBalance;
 
         public int UserNumber { get; private set; }
         public string UserFirstName { get; private set; }
         public string UserLastName { get; private set; }
-        public double UserBalance { get; private set; }
 
-        public AccountProtectedByChannels(int userNumber, string firstName, string lastName, double userBalance = 0)
+        public AccountProtected(int userNumber, string firstName, string lastName, double userBalance = 0)
         {
             this.UserNumber = userNumber;
             this.UserFirstName = firstName;
             this.UserLastName = lastName;
-            this.UserBalance = userBalance;
 
-            // Start the background processing for transactions
-            ProcessTransactions();
+            // Set initial balance
+            this.userBalance = userBalance;
         }
 
         public bool Deposit(double amount)
@@ -36,9 +33,9 @@ namespace _9Concurency.BankingSystem
             return true;
         }
 
-        public bool Withdraw(double amount)
+        public async Task<bool> Withdraw(double amount)
         {
-            if (amount < 0 || amount > this.UserBalance)
+            if (amount <= 0 || amount > await GetUserBalance())
             {
                 return false;
             }
@@ -47,13 +44,25 @@ namespace _9Concurency.BankingSystem
             return true;
         }
 
-        private async void ProcessTransactions()
+        public async Task<double> GetBalance()
         {
+            if (transactionChannel.Reader.TryRead(out var _))
+            {
+                // Process pending transactions
+                userBalance = await GetUserBalance();
+            }
+
+            return userBalance;
+        }
+
+        private async Task<double> GetUserBalance()
+        {
+            double balance = userBalance;
             await foreach (var transaction in transactionChannel.Reader.ReadAllAsync())
             {
-                // Apply the transaction
-                UserBalance += transaction;
+                balance += transaction;
             }
+            return balance;
         }
     }
 }
