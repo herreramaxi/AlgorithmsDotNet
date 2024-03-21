@@ -20,14 +20,16 @@ namespace _9Concurency
         private readonly int _maxValuesToBeGenerated;
         private readonly IList<Thread> _producers = new List<Thread>();
         private readonly IList<Thread> _consumers = new List<Thread>();
-        public ProducerConsumerDirector(ILogger logger ,ProducerConsumerType type, int producersQuantity = 1, int consumersQuantity = 1, int maxValuesToBeGeneratedByProducer = 100, bool simulateProcessingTime = false)
+        public ProducerConsumerDirector(ILogger logger, ProducerConsumerType type, int producersQuantity = 1, int consumersQuantity = 1, int maxValuesToBeGeneratedByProducer = 100, bool simulateProcessingTime = false)
         {
             _logger = logger;
             _maxValuesToBeGenerated = maxValuesToBeGeneratedByProducer;
             var intBufferNoProtected = new IntBufferNoProtected(8);
             var intBufferProtectedByLockAndMonitor = new IntBufferProtectedByLockAndMonitor(8);
             var intBufferDataflow = new BufferBlock<int>();
-            var intBufferChannel = Channel.CreateUnbounded<int>();
+            var intBufferChannel = Channel.CreateBounded<int>(8);
+            //TODO: Add with queues
+            //TODO: I would like unbounded
 
             var buffersByType = new Dictionary<ProducerConsumerType, object>() {
                 { ProducerConsumerType.NoProtected, intBufferNoProtected },
@@ -37,7 +39,7 @@ namespace _9Concurency
             };
 
             var producerConsumer = GetProducerConsumer(logger, type, buffersByType, simulateProcessingTime);
-                    
+
             for (int i = 0; i < producersQuantity; i++)
             {
                 var maxValues = _maxValuesToBeGenerated / producersQuantity;
@@ -89,7 +91,7 @@ namespace _9Concurency
                 consumerThread.Join();
             }
 
-            _logger.Information($"All elements produced and consumed: {_maxValuesToBeGenerated}");            
+            _logger.Information($"All elements produced and consumed: {_maxValuesToBeGenerated}");
         }
 
         private IProducerConsumer GetProducerConsumer(ILogger logger, ProducerConsumerType type, Dictionary<ProducerConsumerType, object> buffersByType, bool simulateProcessingTime)

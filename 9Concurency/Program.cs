@@ -1,8 +1,8 @@
-﻿namespace _9Concurency
-{
-    using Serilog;
-    using System;
+﻿using Serilog;
+using System;
 
+namespace _9Concurency
+{
     class Program
     {
         static void Main(string[] args)

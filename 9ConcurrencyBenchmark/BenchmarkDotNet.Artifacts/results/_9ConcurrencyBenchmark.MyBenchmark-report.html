@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>_9ConcurrencyBenchmark.MyBenchmark-20240319-003613</title>
+<title>_9ConcurrencyBenchmark.MyBenchmark-20240319-005813</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -25,9 +25,9 @@ BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3296/23H2/2023Update/SunValley3
 <table>
 <thead><tr><th>Method                   </th><th>MAX_VALUES</th><th>MAX_PRODUCERS</th><th>MAX_CONSUMERS</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Ratio </th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
 </tr>
-</thead><tbody><tr><td>ProducerConsumer_LockAndMonitor</td><td>1000</td><td>2</td><td>2</td><td>2.269 ms</td><td>0.0450 ms</td><td>0.1193 ms</td><td>baseline</td><td></td><td>121.0938</td><td>50.7813</td><td>23.4375</td><td>731.96 KB</td><td></td>
-</tr><tr><td>ProducerConsumer_Dataflow</td><td>1000</td><td>2</td><td>2</td><td>1.887 ms</td><td>0.0329 ms</td><td>0.0323 ms</td><td>1.18x faster</td><td>0.05x</td><td>128.9063</td><td>56.6406</td><td>27.3438</td><td>767.84 KB</td><td>1.05x more</td>
-</tr><tr><td>ProducerConsumer_Channel</td><td>1000</td><td>2</td><td>2</td><td>1.966 ms</td><td>0.0388 ms</td><td>0.0916 ms</td><td>1.16x faster</td><td>0.08x</td><td>144.5313</td><td>60.5469</td><td>19.5313</td><td>736.24 KB</td><td>1.01x more</td>
+</thead><tbody><tr><td>ProducerConsumer_LockAndMonitor</td><td>1000</td><td>2</td><td>2</td><td>2.251 ms</td><td>0.0438 ms</td><td>0.1075 ms</td><td>baseline</td><td></td><td>121.0938</td><td>54.6875</td><td>23.4375</td><td>731.7 KB</td><td></td>
+</tr><tr><td>ProducerConsumer_Dataflow</td><td>1000</td><td>2</td><td>2</td><td>1.918 ms</td><td>0.0383 ms</td><td>0.0484 ms</td><td>1.17x faster</td><td>0.07x</td><td>128.9063</td><td>54.6875</td><td>23.4375</td><td>775.46 KB</td><td>1.06x more</td>
+</tr><tr><td>ProducerConsumer_Channel</td><td>1000</td><td>2</td><td>2</td><td>1.967 ms</td><td>0.0392 ms</td><td>0.0947 ms</td><td>1.15x faster</td><td>0.09x</td><td>132.8125</td><td>68.3594</td><td>17.5781</td><td>736.13 KB</td><td>1.01x more</td>
 </tr></tbody></table>
 </body>
 </html>
