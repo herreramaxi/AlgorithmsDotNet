@@ -1,8 +1,7 @@
 using _9Concurency.BankingSystem;
 using FluentAssertions;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,14 +15,19 @@ namespace _9Concurrency.Tests
         [InlineData(-1000)]
         public void When_Amount_Is_Less_Or_Equal_To_Zero_Then_Deposit_Return_False(double amount)
         {
-            //Arrange
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen");
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            //Act
-            var result = account.Deposit(amount);
+            foreach (var accountType  in accountTypes)
+            {
+                //Arrange
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen");             
 
-            //Assert
-            result.Should().BeFalse();
+                //Act
+                var result = account.Deposit(amount);
+
+                //Assert
+                result.Should().BeFalse();
+            }         
         }
 
 
@@ -33,43 +37,58 @@ namespace _9Concurrency.Tests
         [InlineData(1000)]
         public void When_Amount_Is_Greater_Than_Zero_Then_Deposit_Return_True_And_Balance_Is_The_Expected(double amount)
         {
-            //Arrange
-            var initialBalance = 1000;
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen", 1000);
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            //Act
-            var result = account.Deposit(amount);
+            foreach (var accountType in accountTypes)
+            {
+                //Arrange
+                var initialBalance = 1000;
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen", 1000);
 
-            //Assert
-            result.Should().BeTrue();
-            account.UserBalance.Should().Be(initialBalance + amount);
+                //Act
+                var result = account.Deposit(amount);
+
+                //Assert
+                result.Should().BeTrue();
+                account.UserBalance.Should().Be(initialBalance + amount);
+            }
         }
 
         [Fact]
         public void When_UserBalance_Is_Zero_Then_Withdraw_Return_False()
         {
-            //Arrange
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen");
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            //Act
-            var result = account.Withdraw(1);
+            foreach (var accountType in accountTypes)
+            {
+                //Arrange
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen");
 
-            //Assert
-            result.Should().BeFalse();
+                //Act
+                var result = account.Withdraw(1);
+
+                //Assert
+                result.Should().BeFalse();
+            }
         }
 
         [Fact]
         public void When_Amount_Is_Greater_Than_Balance_Then_Withdraw_Return_False()
         {
-            //Arrange
-            var initialBalance = 1000;
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen", initialBalance);
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            //Act
-            var result = account.Withdraw(initialBalance + 100);
+            foreach (var accountType in accountTypes)
+            {
+                //Arrange
+                var initialBalance = 1000;
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen", initialBalance);
 
-            //Assert
-            result.Should().BeFalse();
+                //Act
+                var result = account.Withdraw(initialBalance + 100);
+
+                //Assert
+                result.Should().BeFalse();
+            }
         }
 
         [Theory]
@@ -78,49 +97,62 @@ namespace _9Concurrency.Tests
         [InlineData(5)]
         public void When_Amount_Is_Less_Or_Equal_To_Balance_Then_Withdraw_Return_True_And_Balance_Is_The_Expected(double amount)
         {
-            //Arrange
-            var initialBalance = 1000;
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen", initialBalance);
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            //Act
-            var result = account.Withdraw(amount);
+            foreach (var accountType in accountTypes)
+            {
+                //Arrange
+                var initialBalance = 1000;
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen", initialBalance);
 
-            //Assert
-            result.Should().BeTrue();
-            account.UserBalance.Should().Be(initialBalance - amount);
+                //Act
+                var result = account.Withdraw(amount);
+
+                //Assert
+                result.Should().BeTrue();
+                account.UserBalance.Should().Be(initialBalance - amount);
+            }
         }
 
         [Fact]
-        public async Task WhenMultipleWithdrawsOccurAtTheSameTime_The_UserBalance_Get_Corrupted()
+        public void Test_Concurrent_Deposit_And_Withdraw()
         {
-            //Arrange
-            var initialBalance = 5000;
-            var withdrawAmount = 10;
-            var account = new AccountNoProtected(1000, "Magnus", "Carlsen", initialBalance);
-            var tasks = new List<Task<bool>>();
+            var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            for (var i = 0; i < 600; i++)
+            foreach (var accountType in accountTypes)
             {
-                var task = Task.Run(() =>
+                const int initialBalance = 1000;
+                const int iterations = 1000;
+                const int threadsCount = 10;
+                var account = AccountFactory.Create(accountType, 123, "John", "Doe", initialBalance);
+
+                var depositTasks = new Task[threadsCount];
+                var withdrawTasks = new Task[threadsCount];
+
+                for (int i = 0; i < threadsCount; i++)
                 {
-                    return account.Withdraw(withdrawAmount);
-                    //for (var j = 0; j < 5; j++)
-                    //{
-                    //    Thread.Sleep(5);
-                    //    var internalResult = account.Withdraw(withdrawAmount);
-                    //    if (!internalResult) return false;
-                    //}
+                    depositTasks[i] = Task.Run(() =>
+                    {
+                        for (int j = 0; j < iterations; j++)
+                        {
+                            account.Deposit(10);
+                        }
+                    });
 
-                    //return true;
-                });
-                tasks.Add(task);
+                    withdrawTasks[i] = Task.Run(() =>
+                    {
+                        for (int j = 0; j < iterations; j++)
+                        {
+                            account.Withdraw(10);
+                        }
+                    });
+                }
+
+                Task.WaitAll(depositTasks.Concat(withdrawTasks).ToArray());
+
+                // Account balance should remain the same if operations were thread-safe
+                Assert.Equal(initialBalance, account.UserBalance);
             }
-
-            //Act
-            var results = await Task.WhenAll(tasks);
-
-            //Assert
-            results.Count(x => x == true).Should().BeGreaterThan(500);
-        }
+        }              
     }
 }

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace _9Concurency.BankingSystem
 {
-    public class AccountWithReaderWriterLockSlim
+    public class AccountWithReaderWriterLockSlim: IAccount
     {
         public int UserNumber { get; private set; }
         public string UserFirstName { get; private set; }
@@ -32,8 +32,6 @@ namespace _9Concurency.BankingSystem
             {
                 var newBalance = this.UserBalance + amount;
                 this.UserBalance = newBalance;
-
-
             }
             finally
             {
@@ -45,11 +43,16 @@ namespace _9Concurency.BankingSystem
 
         public Boolean Withdraw(double amount)
         {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
             _balanceLock.EnterWriteLock();
 
             try
             {
-                if (amount < 0 || amount > this.UserBalance)
+                if (amount > this.UserBalance)
                 {
                     return false;
                 }

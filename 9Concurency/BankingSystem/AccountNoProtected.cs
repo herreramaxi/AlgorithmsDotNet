@@ -2,7 +2,7 @@
 
 namespace _9Concurency.BankingSystem
 {
-    public class AccountNoProtected
+    public class AccountNoProtected: IAccount
     {
         public int UserNumber { get; private set; }
         public string UserFirstName { get; private set; }

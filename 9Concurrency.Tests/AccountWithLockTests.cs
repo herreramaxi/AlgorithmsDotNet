@@ -11,6 +11,41 @@ namespace _9Concurrency.Tests
     public class AccountWithLockTests
     {
         [Fact]
+        public void Test_Concurrent_Deposit_And_Withdraw()
+        {
+            var initialBalance = 1000.0;
+            var threadsCount = 10;
+            var iterations = 1000;
+            var amount = 10.0;
+            var depositTasks = new Task[threadsCount];
+            var withdrawTasks = new Task[threadsCount];
+            var account = new AccountWithLock(1234, "Magnus", "Carlsen", initialBalance);
+
+            for (var i = 0; i < threadsCount; i++)
+            {
+                depositTasks[i] = Task.Run(() =>
+                {
+                    for (var j = 0; j < iterations; j++)
+                    {
+                        account.Deposit(amount);
+                    }
+                });
+
+                withdrawTasks[i] = Task.Run(() =>
+                {
+                    for (var j = 0; j < iterations; j++)
+                    {
+                        account.Withdraw(amount);
+                    }
+                });
+            }
+
+            Task.WaitAll(depositTasks.Concat(withdrawTasks).ToArray());
+
+            initialBalance.Should().Be(account.UserBalance);
+        }
+
+        [Fact]
         public async Task WhenMultipleWithdrawsOccurAtTheSameTime_The_UserBalance_Get_Corrupted()
         {
             //Arrange

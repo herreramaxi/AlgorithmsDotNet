@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
 
 namespace _9Concurency.BankingSystem
 {
-    public class AccountWithLock: IAccount
+    public class AccountWithManualResetEvent: IAccount
     {
         public int UserNumber { get; private set; }
         public string UserFirstName { get; private set; }
         public string UserLastName { get; private set; }
         public double UserBalance { get; private set; }
 
-        private readonly object _balanceLock = new object();
+        private readonly ManualResetEvent _balanceLock = new ManualResetEvent(true); // Initially set to true (signaled)
 
-        public AccountWithLock(int userNumber, string firstName, string lastName, double userBalance = 0)
+        public AccountWithManualResetEvent(int userNumber, string firstName, string lastName, double userBalance = 0)
         {
             this.UserNumber = userNumber;
             this.UserFirstName = firstName;
@@ -26,10 +29,16 @@ namespace _9Concurency.BankingSystem
                 return false;
             }
 
-            lock (_balanceLock)
+            _balanceLock.WaitOne(); // Wait until the event is signaled
+
+            try
             {
                 var newBalance = this.UserBalance + amount;
                 this.UserBalance = newBalance;
+            }
+            finally
+            {
+                _balanceLock.Set(); // Set the event to signaled state
             }
 
             return true;
@@ -37,18 +46,29 @@ namespace _9Concurency.BankingSystem
 
         public Boolean Withdraw(double amount)
         {
-            lock (_balanceLock)
+            if (amount <= 0)
             {
-                if (amount < 0 || amount > this.UserBalance)
+                return false;
+            }
+
+            _balanceLock.WaitOne(); // Wait until the event is signaled
+
+            try
+            {
+                if (amount > this.UserBalance)
                 {
                     return false;
                 }
 
                 var newBalance = this.UserBalance - amount;
                 this.UserBalance = newBalance;
-
-                return true;
             }
+            finally
+            {
+                _balanceLock.Set(); // Set the event to signaled state
+            }
+
+            return true;
         }
     }
 }
