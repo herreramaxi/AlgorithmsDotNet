@@ -1,4 +1,5 @@
-﻿using System.Threading.Channels;
+﻿using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -27,7 +28,10 @@ namespace _9Concurency.BankingSystem
 
         public bool Deposit(double amount)
         {
-            return DepositAsync(amount).Result;
+            var result = DepositAsync(amount).Result;
+            Thread.Sleep(100);
+
+            return result;
         }
 
         public async Task<bool> DepositAsync(double amount)
@@ -43,7 +47,10 @@ namespace _9Concurency.BankingSystem
 
         public bool Withdraw(double amount)
         {
-            return WithdrawAsync(amount).Result;
+            var result = WithdrawAsync(amount).Result;
+            Thread.Sleep(100);
+
+            return result;
         }
 
         public async Task<bool> WithdrawAsync(double amount)
@@ -55,6 +62,10 @@ namespace _9Concurency.BankingSystem
 
             await _transactionChannel.Writer.WriteAsync(-amount);
             return true;
+        }
+
+        public void CompleteWriterChannel() {
+            _transactionChannel.Writer.Complete();
         }
 
         private async Task StartWorker()

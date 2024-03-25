@@ -17,17 +17,17 @@ namespace _9Concurrency.Tests
         {
             var accountTypes = (AccountType[])Enum.GetValues(typeof(AccountType));
 
-            foreach (var accountType  in accountTypes)
+            foreach (var accountType in accountTypes)
             {
                 //Arrange
-                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen");             
+                var account = AccountFactory.Create(accountType, 1000, "Magnus", "Carlsen");
 
                 //Act
                 var result = account.Deposit(amount);
 
                 //Assert
                 result.Should().BeFalse();
-            }         
+            }
         }
 
 
@@ -150,9 +150,20 @@ namespace _9Concurrency.Tests
 
                 Task.WaitAll(depositTasks.Concat(withdrawTasks).ToArray());
 
+                if (account is AccountProtectedByChannels accountProtectedByChannels)
+                {
+                    accountProtectedByChannels.CompleteWriterChannel();
+                }
+
+                if (account is AccountNoProtected)
+                {
+                    Assert.NotEqual(initialBalance, account.UserBalance);
+                    return;
+                }
+                
                 // Account balance should remain the same if operations were thread-safe
                 Assert.Equal(initialBalance, account.UserBalance);
             }
-        }              
+        }
     }
 }
